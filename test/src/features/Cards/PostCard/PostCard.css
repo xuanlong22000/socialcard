@@ -1,0 +1,84 @@
+/*List card*/
+
+h2{
+ text-align: center;
+}
+
+.group{
+  display: flex;
+ justify-content: flex-end;
+}
+
+.input-group .rounded{
+  margin: auto 10px;
+}
+
+.input-group>.form-control, .input-group>.form-select {
+    position: relative;
+    width: 200px;
+    min-width: 0;
+    justify-content: flex-end;
+}
+
+.btn {
+  margin: auto 10px;
+  
+}
+
+
+.group_list{
+  display: flex;
+  flex-direction: row;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+}
+/*Card header*/
+.cards_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto 10px;
+}
+.cards_header h3{
+  margin: auto 10px;
+  font-size: 20px;
+}
+.cards_user{
+  display: flex;
+  flex-direction:row;
+}
+
+.cards_icon {
+  display: flex;
+  justify-content: space-between;
+  margin: auto 2px;
+  cursor: pointer;
+  font-size: 20px;
+}
+.icon_1{
+  margin: auto 10px;
+  color: rgb(6, 223, 6);
+}
+.icon_2{
+  margin: auto 10px;
+  color: rgb(255, 0, 0);
+}
+
+
+
+.cards_footer .img{
+width: 400px;
+border-radius: 4px;
+}
+
+.cards .avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+  
+

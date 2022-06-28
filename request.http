@@ -1,0 +1,12 @@
+# GET http://localhost:5000/posts/
+# ###
+# DELETE  http://localhost:5000/posts/62bac632d20fef5b10a56e01
+# ###
+# POST  http://localhost:5000/posts/
+# content-type: application/json
+
+# {
+#   "name": "PHP React",
+#     "desc": "PHP React",
+
+# }
