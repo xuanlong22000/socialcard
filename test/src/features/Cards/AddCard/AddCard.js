@@ -8,8 +8,6 @@ import './AddCard.css';
 import { postAdded } from '../CardSlice';
 import { Link } from 'react-router-dom';
 
-AddCard.propTypes = {};
-
 function AddCard() {
     const dispatch = useDispatch()
 
@@ -30,28 +28,26 @@ function AddCard() {
             dispatch(
                 postAdded(avatar, name, desc, image)
             )
-            setAvatar('')
-            setName('')
-            setDesc('')
-            setImage('')
         }
 
         window.location.href = "/"
     }
 
     return (
-        <section>
-            <h2>Add a New Card</h2>
-            <form>
-                <div className="input-group ">Avatar:
+        <div className='add-card-container'>
+
+            <div className='form-add-card'>
+                <h2 className='header-new-card'>Add a New Card</h2>
+                <div className="input-group ">
+                    <p>Avatar:</p>
                     <input
                         type="text"
                         className="form-control"
                         value={avatar}
-                        onChange={onAvatarChanged} id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" />
+                        onChange={onAvatarChanged} />
                 </div>
                 <div className='name_post'>
-                    <label htmlFor="postName">Name:</label>
+                    <span>Name:</span>
                     <input
                         type="text"
                         id="postName"
@@ -61,8 +57,8 @@ function AddCard() {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="cardContent" className="form-label">Description: </label>
-                    <textarea
+                    <span>Description: </span>
+                    <input
                         id="cardContent"
                         name="cardContent"
                         rows={"1"}
@@ -83,8 +79,8 @@ function AddCard() {
 
 
                 </div>
-            </form>
-        </section>
+            </div>
+        </div>
     );
 }
 

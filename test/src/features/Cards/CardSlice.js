@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { sub } from 'date-fns';
 import SocialCardsApi from "../../api/socialCardApi";
 
 
@@ -43,7 +42,7 @@ const CardSlice = createSlice({
             reducer(state, action) {
                 SocialCardsApi.saveAll(action.payload)
             },
-            prepare(name, desc, avatar, image) {
+            prepare(avatar, name, desc, image) {
                 return {
                     payload: {
                         avatar,
@@ -61,11 +60,6 @@ const CardSlice = createSlice({
             }
         },
 
-        updatePost: {
-            reducer(state, action) {
-                SocialCardsApi.update(action.payload)
-            }
-        }
     }
 
 })

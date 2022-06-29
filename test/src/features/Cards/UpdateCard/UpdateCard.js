@@ -1,16 +1,15 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudUpload } from '@fortawesome/free-solid-svg-icons'
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { postAdded } from '../CardSlice';
-import { Link } from 'react-router-dom';
-
-UpdateCard.propTypes = {};
+import { useDispatch } from "react-redux";
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function UpdateCard() {
     const dispatch = useDispatch()
+
+    const [data, setData] = useState([])
+    const { id } = useParams()
 
     const [avatar, setAvatar] = useState('')
     const [name, setName] = useState('')
@@ -18,6 +17,9 @@ function UpdateCard() {
     const [image, setImage] = useState('')
 
 
+    useEffect(() => {
+        axios.get(`http://localhost:5000/posts/update/${id}`).then(res => console.log(res.data))
+    }, [])
 
     const onAvatarChanged = e => setAvatar(e.target.value)
     const onNameChanged = e => setName(e.target.value)
@@ -32,7 +34,7 @@ function UpdateCard() {
         <section>
             <h2>Update Card</h2>
             <form>
-                <div className="input-group ">Avatar:
+                <div className="input-group">Avatar:
                     <input
                         type="text"
                         className="form-control"

@@ -34,3 +34,21 @@ export const deletePostId = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
+export const updatePost = async (req, res) => {
+    const postId = req.params.id
+    PostMessage.find({ _id: postId }).then(post => console.log(post))
+
+
+
+    // PostMessage.findByIdAndUpdate(postId,{})
+
+    // const newPost = new PostMessage(post)
+    // try {
+    //     await newPost.save()
+
+    //     res.status(201).json(newPost)
+    // } catch (error) {
+    //     res.status(200).json({ message: error.message })
+    // }
+}
