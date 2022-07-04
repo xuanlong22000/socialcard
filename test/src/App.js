@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import PostCard from './features/Cards/PostCard/PostCard';
 import UpdateCard from './features/Cards/UpdateCard/UpdateCard';
+import DetailsCard from './features/Cards/DetailsCard/DetailsCard';
 
 function App() {
 
@@ -16,9 +17,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<PostCard />} />
-          <Route path="/add" element={<AddCard />} />
-          <Route path="/update/:id" element={<UpdateCard />} />
-
+          <Route path="/details" element={<DetailsCard />} />
         </Routes>
       </Router>
     </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 const AxiosClient = axios.create({
-    baseURL: 'http://localhost:5000/posts',
+    baseURL: 'http://192.168.0.120:5000/posts',
     headers: {
         'content-type': 'application/json'
     },

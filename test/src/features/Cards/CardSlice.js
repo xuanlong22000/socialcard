@@ -1,36 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import SocialCardsApi from "../../api/socialCardApi";
 
 
-const initialState = [
-    // {
-    //     id: '1',
-    //     avatar: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     name: 'Learning React',
-    //     desc: "Learn React",
-    //     image: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     date: sub(new Date(), { minutes: 10 }).toISOString(),
+export const getPosts = createAsyncThunk(
+    'posts/getPosts',
+    async () => {
+        const res = await SocialCardsApi.showdata()
+        return res
+    }
+)
 
-    // },
-    // {
-    //     id: '2',
-    //     avatar: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     name: 'React 1',
-    //     desc: "The more I say slice, the more I want pizza.",
-    //     image: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     date: sub(new Date(), { minutes: 5 }).toISOString(),
+export const addPosts = createAsyncThunk(
+    'posts/addPosts',
+    async (data) => {
+        const res = await SocialCardsApi.saveAll(data)
+        return res
+    }
+)
 
-    // },
-    // {
-    //     id: '3',
-    //     avatar: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     name: 'React 2',
-    //     desc: "The more I say slice, the more I want pizza.",
-    //     image: 'https://files.fullstack.edu.vn/f8-prod/courses/13/13.png',
-    //     date: sub(new Date(), { minutes: 5 }).toISOString(),
+export const deletePosts = createAsyncThunk(
+    'posts/deletePosts',
+    async (id) => {
+        await SocialCardsApi.delete(id)
+        return id;
+    }
+)
 
-    // }
-]
+const initialState = {
+    posts: []
+}
 
 
 
@@ -38,34 +36,41 @@ const CardSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
-        postAdded: {
-            reducer(state, action) {
-                SocialCardsApi.saveAll(action.payload)
-            },
-            prepare(avatar, name, desc, image) {
-                return {
-                    payload: {
-                        avatar,
-                        name,
-                        desc,
-                        image
-                    }
-                }
-            }
-        },
-        deletePost: {
-            reducer(state, action) {
+        // postAdded: {
+        //     reducer(state, action) {
+        //         SocialCardsApi.saveAll(action.payload)
+        //     },
+        //     prepare(avatar, name, desc, image) {
+        //         return {
+        //             payload: {
+        //                 avatar,
+        //                 name,
+        //                 desc,
+        //                 image
+        //             }
+        //         }
+        //     }
+        // },
+    },
 
-                SocialCardsApi.delete(action.payload)
-            }
-        },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getPosts.fulfilled, (state, action) => {
+                state.posts = action.payload;
+            })
+
+            .addCase(addPosts.fulfilled, (state, action) => {
+                state.posts.push(action.payload)
+                // state.posts = action.payload
+            })
+
+            .addCase(deletePosts.fulfilled, (state, action) => {
+                state.posts = state.posts.filter((item, index) => item._id !== action.payload)
+            })
 
     }
 
+
 })
 
-export const selectAllPosts = (state) => state.posts;
-
-
-export const { postAdded, deletePost, updatePost } = CardSlice.actions
 export default CardSlice.reducer

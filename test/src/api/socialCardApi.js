@@ -1,9 +1,9 @@
 import AxiosClient from "./axiosClient";
 
 const SocialCardsApi = {
-    // showdata: () => {
-    //     return AxiosClient.get('/');
-    // },
+    showdata: () => {
+        return AxiosClient.get('/');
+    },
     saveAll: (data) => {
         return AxiosClient.post('/', data);
     },
