@@ -17,7 +17,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<PostCard />} />
-          <Route path="/details" element={<DetailsCard />} />
+          <Route path="/posts/details/:id" element={<DetailsCard />} />
         </Routes>
       </Router>
     </div>

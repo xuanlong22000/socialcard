@@ -19,9 +19,9 @@ const SocialCardsApi = {
         const url = "/" + id;
         return AxiosClient.delete(url)
     },
-    update: (id) => {
+    update: (id, data) => {
         const url = `/update/${id}`;
-        return AxiosClient.get(url)
+        return AxiosClient.put(url, data)
     },
     // saveComment: (data) => {
     //     return AxiosClient.post('/socialcards/save_comment', data);

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { format } from 'date-format-parse';
 import { deletePosts } from '../CardSlice';
 import UpdateCard from '../UpdateCard/UpdateCard';
+import { Link } from 'react-router-dom';
 
 
 function ItemCard(props) {
@@ -13,6 +14,8 @@ function ItemCard(props) {
 
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [edit, setEdit] = useState('')
+
     const dispatch = useDispatch()
 
     const handleOpen = () => setOpen(true);
@@ -21,12 +24,14 @@ function ItemCard(props) {
     const handleOpen2 = () => setOpen2(true);
     const handleClose2 = () => setOpen2(false);
 
+
     function handleDelete(id) {
         dispatch(deletePosts(id))
         handleClose2()
     }
     return (
         <div>
+
             <article className="cards" key={post._id}>
                 <div className="cards_header">
                     <div className="cards_user">
@@ -41,11 +46,12 @@ function ItemCard(props) {
 
                     <div className="cards_icon">
 
-                        <span onClick={handleOpen} className="pencil">
+                        <span onClick={() => { handleOpen(); setEdit(post._id) }} className="pencil">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                                 <path id="pencil-alt-solid" d="M17.528,5.068,15.907,6.689a.422.422,0,0,1-.6,0l-3.9-3.9a.422.422,0,0,1,0-.6L13.028.568a1.691,1.691,0,0,1,2.387,0l2.113,2.113A1.685,1.685,0,0,1,17.528,5.068ZM10.015,3.581.782,12.814.037,17.085a.845.845,0,0,0,.977.977l4.272-.749,9.232-9.232a.422.422,0,0,0,0-.6l-3.9-3.9a.427.427,0,0,0-.6,0ZM4.386,12.023a.49.49,0,0,1,0-.7L9.8,5.912a.492.492,0,1,1,.7.7L5.082,12.023a.49.49,0,0,1-.7,0ZM3.117,14.979H4.8v1.276l-2.268.4L1.443,15.559l.4-2.268H3.117Z" transform="translate(-0.024 -0.075)" fill="#064ebc" />
                             </svg>
                         </span>
+
                         <Modal
                             open={open}
                             onClose={handleClose}
@@ -53,7 +59,7 @@ function ItemCard(props) {
                             aria-describedby="modal-modal-description"
                         >
                             <Box >
-                                <UpdateCard props={handleClose} />
+                                <UpdateCard props={handleClose} edit={edit} />
                             </Box>
                         </Modal>
 
@@ -90,12 +96,14 @@ function ItemCard(props) {
                         </Modal>
                     </div>
                 </div>
-                <div className="cards_footer">
-                    <p className="description">{post.desc}</p>
-                    <img src={post.image} alt='' />
-                </div>
-
+                <Link style={{ textDecoration: 'none', color: 'black' }} to={`/posts/details/${post._id}`}>
+                    <div className="cards_footer">
+                        <p className="description">{post.desc}</p>
+                        <img src={post.image} alt='' />
+                    </div>
+                </Link>
             </article>
+
         </div>
     )
 }

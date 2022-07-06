@@ -29,6 +29,12 @@
   color: #000000;
 }
 
+.name-field-image {
+  font: normal normal normal 16px/21px Segoe UI;
+  margin-right: 58px;
+  color: #000000;
+}
+
 .input-data {
   width: 322px;
   height: 35px;
