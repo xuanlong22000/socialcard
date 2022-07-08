@@ -52,6 +52,7 @@
   margin-top: 31px;
   display: flex;
   margin-bottom: 25px;
+  user-select: none;
 }
 
 .comment-detail {

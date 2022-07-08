@@ -12,9 +12,12 @@ const DetailsCard = () => {
     const [commentError, setCommentError] = useState(false);
     const [data, setData] = useState([])
 
+    const [countLike, setCountLike] = useState()
+
+
     useEffect(() => {
         axios.get(`http://192.168.0.120:5000/posts/details/${path.id}`)
-            .then(res => setData(res.data))
+            .then(res => { setData(res.data); setCountLike(res.data.like) })
     }, [])
 
 
@@ -25,10 +28,25 @@ const DetailsCard = () => {
     }, []);
 
     const handleSubmitComment = async (e) => {
+        e.preventDefault()
         const data = { cardId: path.id, comment: saveComment }
-        await axios.post(`http://192.168.0.120:5000/posts/comment/add`, data)
-            .then((res) => window.location.reload())
-            .catch((error) => console.log(error));
+        if (saveComment) {
+            await axios.post(`http://192.168.0.120:5000/posts/comment/add`, data)
+                .then(({ data }) => {
+                    setComments([...comments, data]);
+                    setSaveComment('')
+                })
+                .catch((error) => console.log(error));
+        } else {
+            setCommentError(true)
+        }
+
+    }
+
+    const handleLike = async () => {
+
+        await axios.put(`http://192.168.0.120:5000/posts/like/${path.id}`, countLike)
+            .then(() => setCountLike(prev => prev + 1))
     }
 
     return (
@@ -49,12 +67,13 @@ const DetailsCard = () => {
                     <img src={data.image} alt='' />
                 </div>
                 <div className='reaction-detail'>
-                    <span>
+                    <span style={{ cursor: 'pointer' }} onClick={handleLike}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="15.393" viewBox="0 0 18 15.393">
                             <path id="heart-solid" d="M0,47.382v-.2a5.025,5.025,0,0,1,8.578-3.554L9,44.045l.39-.421a5.114,5.114,0,0,1,4.412-1.4A5.024,5.024,0,0,1,18,47.178v.2a5.259,5.259,0,0,1-1.673,3.85L9.974,57.162a1.429,1.429,0,0,1-1.948,0L1.673,51.231A5.264,5.264,0,0,1,0,47.382Z" transform="translate(0 -42.152)" fill="#f3115e" />
                         </svg>
                     </span>
-                    <p style={{ marginLeft: '5px', lineHeight: '1.9' }}>2</p>
+
+                    <p style={{ marginLeft: '5px', lineHeight: '1.9' }}>{countLike}</p>
 
                     <span style={{ marginLeft: '25px' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17.904" viewBox="0 0 18 17.904">
@@ -84,7 +103,7 @@ const DetailsCard = () => {
             </div>
             <div className='form-comment-detail'>
                 <h4>Post a new comment</h4>
-                <textarea className='input-comment-detail' placeholder='Add comment...' onChange={(e) => setSaveComment(e.target.value)}></textarea>
+                <textarea className='input-comment-detail' placeholder='Add comment...' style={commentError ? { borderColor: ' red' } : {}} value={saveComment} onChange={(e) => { setSaveComment(e.target.value); setCommentError(false) }}></textarea>
                 <button className='form-button-detail' onClick={handleSubmitComment}>Post</button>
             </div>
 

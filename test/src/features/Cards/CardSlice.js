@@ -28,9 +28,11 @@ export const deletePosts = createAsyncThunk(
 
 export const updatePosts = createAsyncThunk(
     'posts/updatePosts',
-    async (data) => {
-        const res = await SocialCardsApi.update(data._id, data)
-        return res
+    async ({ id, data }) => {
+
+        const action = { id: id, data: data }
+        await SocialCardsApi.update(id, data)
+        return action
     }
 )
 
@@ -75,6 +77,10 @@ const CardSlice = createSlice({
                 state.posts = state.posts.filter((item, index) => item._id !== action.payload)
             })
             .addCase(updatePosts.fulfilled, (state, action) => {
+
+                const postIndex = state.posts.findIndex(item => item._id === action.payload.id)
+
+                state.posts[postIndex] = action.payload.data
 
             })
 

@@ -25,15 +25,34 @@ export const createPost = async (req, res) => {
     }
 }
 
-export const deletePostId = async (req, res) => {
+// export const deletePostId = async (req, res) => {
+//     const id = req.params.id
+//     try {
+//         await PostMessage.deleteOne({ _id: id })
+//         res.status(200).json({ message: "xoa roi nghe" })
+//     } catch (error) {
+//         res.status(500).json({ message: error.message })
+//     }
+// }
+
+export const deleteSoftPost = async (req, res) => {
     const id = req.params.id
     try {
-        await PostMessage.deleteOne({ _id: id })
+        await PostMessage.delete({ _id: id })
         res.status(200).json({ message: "xoa roi nghe" })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
 }
+
+// export const restorePost = async (req, res) => {
+//     try {
+//         const postMessages = await PostMessage.restore({})
+//         res.status(200).json(postMessages)
+//     } catch (error) {
+//         res.status(500).json({ message: error.message })
+//     }
+// }
 
 export const updatePost = async (req, res) => {
 
@@ -47,16 +66,49 @@ export const updatePost = async (req, res) => {
         res.status(200).json({ message: error.message })
     }
 
-    // PostMessage.findByIdAndUpdate(postId,{})
+}
 
-    // const newPost = new PostMessage(post)
-    // try {
-    //     await newPost.save()
+export const updateDeleteField = async (req, res) => {
 
-    //     res.status(201).json(newPost)
-    // } catch (error) {
-    //     res.status(200).json({ message: error.message })
-    // }
+    const fullPost = await PostMessage.findById(req.params.id)
+
+    try {
+        const postMessages = await PostMessage.findByIdAndUpdate(req.params.id,
+            {
+
+                deleted: fullPost.deleted === true ? false : true
+
+            },
+            { new: true }
+        )
+
+        res.status(200).json(postMessages)
+    } catch (error) {
+        res.status(200).json({ message: error.message })
+    }
+
+}
+
+export const likePost = async (req, res) => {
+
+    const data = await PostMessage.findById(req.params.id);
+
+    try {
+        const postMessages = await PostMessage.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    like: data.like + 1
+                }
+            },
+            { new: true }
+        )
+
+        res.status(200).json(postMessages)
+    } catch (error) {
+        res.status(200).json({ message: error.message })
+    }
+
 }
 
 export const getPostsDetails = async (req, res) => {

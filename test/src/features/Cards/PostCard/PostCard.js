@@ -1,10 +1,13 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AddCard from "../AddCard/AddCard";
 import ItemCard from "../ItemCard/ItemCard";
 import "./PostCard.css";
+import axios from 'axios';
+import { getPosts } from '../CardSlice';
+import { revertDelete } from '../RevertSlice';
 
 // This is LIST social
 
@@ -12,19 +15,32 @@ const PostCard = () => {
 
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('')
+    const dispatch = useDispatch()
 
     const posts = useSelector(state => state.posts.posts)
+    const ListReverts = useSelector(state => state.reverts.revert)
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const filterPosts = posts.filter(post => post.name.toLowerCase().includes(search.toLowerCase().trim()) || post.desc.toLowerCase().includes(search.toLowerCase().trim()))
+    const handleRevert = async () => {
+        if (ListReverts.length > 0) {
+            await axios.put(`http://localhost:5000/posts/revert/${ListReverts[0]}`)
+            dispatch(revertDelete())
+            dispatch(getPosts())
+        } else {
+            alert('Index Start')
+        }
+
+    }
+
+    const filterPosts = posts.filter(post => post.name.toLowerCase().includes(search.toLowerCase()) || post.desc.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <section className='container-social-card'>
             <h2 className='title-list-social'>LIST SOCIAL CARD</h2>
             <div className="group">
-                <button className="btn-revert" type="button">Revert</button>
+                <button className="btn-revert" type="button" onClick={handleRevert}>Revert</button>
                 {/* <Link to="/add"></Link> */}
                 <button className="btn-add" type="button" onClick={handleOpen}>Add New</button>
                 <Modal
@@ -37,7 +53,7 @@ const PostCard = () => {
                         <AddCard props={handleClose} />
                     </Box>
                 </Modal>
-                <input value={search} onChange={(e) => setSearch(e.target.value)} type="search" className="search" placeholder="Search name..." />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" className="search" placeholder="Search name..." />
 
                 <svg className='glasses' xmlns="http://www.w3.org/2000/svg" width="20" height="20.003" viewBox="0 0 20 20.003">
                     <path id="search-solid" d="M19.728,17.294,15.833,13.4a.937.937,0,0,0-.664-.273h-.637a8.122,8.122,0,1,0-1.406,1.406v.637a.937.937,0,0,0,.273.664l3.895,3.895a.934.934,0,0,0,1.324,0l1.106-1.106A.942.942,0,0,0,19.728,17.294Zm-11.6-4.168a5,5,0,1,1,5-5A5,5,0,0,1,8.126,13.126Z" fill="#bdbdbd" opacity="0.3" />
@@ -214,7 +230,7 @@ const PostCard = () => {
                         </div>
                         :
                         filterPosts.map((e, i) => (
-                            <ItemCard props={e} key={i} />
+                            <ItemCard revertDelete={handleRevert} props={e} key={i} />
                         ))
                     }
                 </div>
