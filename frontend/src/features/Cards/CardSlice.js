@@ -29,7 +29,6 @@ export const deletePosts = createAsyncThunk(
 export const updatePosts = createAsyncThunk(
     'posts/updatePosts',
     async ({ id, data }) => {
-
         const action = { id: id, data: data }
         await SocialCardsApi.update(id, data)
         return action

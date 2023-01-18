@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import "./ItemCard.css";
 import { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { format } from 'date-format-parse';
 import { deletePosts } from '../CardSlice';
 import UpdateCard from '../UpdateCard/UpdateCard';

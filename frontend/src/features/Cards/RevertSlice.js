@@ -12,7 +12,7 @@ const revertSlice = createSlice({
             state.revert.unshift(action.payload)
         },
         revertDelete(state, action) {
-            state.revert.shift(action.payload)
+            state.revert.shift()
         }
     },
 })

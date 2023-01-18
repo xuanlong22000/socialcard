@@ -3,7 +3,7 @@
 .form-add-card {
   padding: 25px 45px;
   width: 514px;
-  height: 381px;
+  height: 390px;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -21,6 +21,7 @@
 
 .header-new-card {
   font-size: 20px;
+  margin-top: -1px;
 }
 
 .name-field {
@@ -47,7 +48,8 @@
 .btn-add-card {
   display: flex;
   justify-content: flex-end;
-  padding-top: 20px;
+  margin-top: 11px;
+  padding-top: 19px;
   border-top: 1px solid #d9d9d9;
 }
 
