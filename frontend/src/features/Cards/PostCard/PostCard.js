@@ -34,7 +34,7 @@ const PostCard = () => {
 
     }
 
-    const filterPosts = posts.filter(post => post.name.toLowerCase().includes(search.toLowerCase()) || post.desc.toLowerCase().includes(search.toLowerCase()))
+    const filterPosts = posts.filter(post => (post.name.toLowerCase().includes(search.toLowerCase()) || post.desc.toLowerCase().includes(search.toLowerCase())) && !post.deleted)
 
     return (
         <section className='container-social-card'>
