@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { updatePosts } from '../CardSlice';
 import { CircularProgress } from '@mui/material';
+import { env } from '../../../config';
 
 const Input = styled('input')({
     display: 'none',
@@ -37,18 +38,18 @@ function UpdateCard(props) {
 
     const dispatch = useDispatch()
 
-    const handleChangeAvatar = (file) => {
-        if (file.type === 'image/jpeg' || file.type === 'image/png') {
-            setAvatarLocal(file.name)
-            setFulAvatar(file)
-            setAvatarValidate(false)
-        }
-        else {
-            setAvatarValidate(true)
-            setAvatar('File không hợp lệ')
-        }
+    // const handleChangeAvatar = (file) => {
+    //     if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    //         setAvatarLocal(file.name)
+    //         setFulAvatar(file)
+    //         setAvatarValidate(false)
+    //     }
+    //     else {
+    //         setAvatarValidate(true)
+    //         setAvatar('File không hợp lệ')
+    //     }
 
-    }
+    // }
 
     const handleChangeImage = (file) => {
         if (file.type === 'image/jpeg' || file.type === 'image/png') {
@@ -63,12 +64,12 @@ function UpdateCard(props) {
     }
 
     const handleOnChangeInput = (e) => {
-        if (e.target.name === 'name') { setName(e.target.value); setNameValidate(false) };
+        // if (e.target.name === 'name') { setName(e.target.value); setNameValidate(false) };
         if (e.target.name === 'desc') { setDesc(e.target.value); setDescValidate(false) };
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/details/${editId}`)
+        axios.get(`${env.API_HOST}/posts/details/${editId}`)
             .then(res => {
 
                 setId(res.data._id)
@@ -81,21 +82,24 @@ function UpdateCard(props) {
     }, [])
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/details/${editId}`)
+        axios.get(`${env.API_HOST}/posts/details/${editId}`)
             .then(res => {
                 setCheck(res.data.deleted)
             })
     }, [handleOnSubmit])
 
     const validateForm = () => {
-        if (avatarValidate || checkImage) {
+        if (
+            // avatarValidate ||
+            checkImage
+        ) {
             return;
         }
 
-        if (!name) {
-            setNameValidate(true)
+        // if (!name) {
+        //     setNameValidate(true)
 
-        }
+        // }
         if (!desc) {
             setDescValidate(true)
         }
@@ -108,19 +112,21 @@ function UpdateCard(props) {
             validateForm()
             setIsLoading(true)
             const form = event.currentTarget;
-            let res1, res2;
-            if (fullAvatar.type === 'image/jpeg' || fullAvatar.type === 'image/png') {
-                const avatarFile = form.avatar.files[0];
-                const formData1 = new FormData();
-                formData1.append('upload_preset', 'my-uploads');
-                formData1.append('file', avatarFile)
+            let
+                // res1, 
+                res2;
+            // if (fullAvatar.type === 'image/jpeg' || fullAvatar.type === 'image/png') {
+            //     const avatarFile = form.avatar.files[0];
+            //     const formData1 = new FormData();
+            //     formData1.append('upload_preset', 'my-uploads');
+            //     formData1.append('file', avatarFile)
 
-                res1 = await axios.post('https://api.cloudinary.com/v1_1/duoqoiqsg/upload', formData1, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-            }
+            //     res1 = await axios.post('https://api.cloudinary.com/v1_1/duoqoiqsg/upload', formData1, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            // }
 
             if (fullImage.type === 'image/jpeg' || fullImage.type === 'image/png') {
                 const imageFile = form.image.files[0]
@@ -138,13 +144,18 @@ function UpdateCard(props) {
             const newCard = {
                 createdAt: createdAt,
                 _id: id,
-                avatar: res1?.data?.url || avatar,
+                avatar:
+                    // res1?.data?.url || 
+                    avatar,
                 name: name,
                 desc: desc,
                 image: res2?.data?.url || image,
             }
 
-            if (name && desc) {
+            if (
+                // name &&
+                desc
+            ) {
                 if (check === true) {
                     window.location.reload()
                     alert('Post is deleted')
@@ -171,7 +182,7 @@ function UpdateCard(props) {
             <form onSubmit={handleOnSubmit}>
                 <div className='form-add-card'>
                     <h2 className='header-new-card'>Update Card</h2>
-                    <div className='form-avatar'>
+                    {/* <div className='form-avatar'>
 
                         <span style={avatarValidate ? { color: 'red' } : {}} className='name-field'>Avatar<span style={{ color: 'red', marginLeft: '3px' }}>*</span></span>
                         <Stack direction="row" alignItems="center" spacing={10}>
@@ -197,7 +208,7 @@ function UpdateCard(props) {
                             value={name}
                             onChange={handleOnChangeInput}
                         />
-                    </div>
+                    </div> */}
                     <div className='name_post'>
                         <span style={descValidate ? { color: 'red' } : {}}>Description<span style={{ color: 'red', marginLeft: '3px' }}>*</span></span>
                         <textarea
@@ -231,7 +242,13 @@ function UpdateCard(props) {
                         <button
                             type="submit"
                             className="btn-save-add"
-                            disabled={isLoading || avatarValidate || nameValidate || descValidate || checkImage}
+                            disabled={
+                                isLoading ||
+                                // avatarValidate ||
+                                // nameValidate ||
+                                descValidate ||
+                                checkImage
+                            }
                         >
                             {isLoading ? <CircularProgress style={{ width: '20px', height: '20px' }} /> : 'Save'}
                         </button>

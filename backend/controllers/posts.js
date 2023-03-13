@@ -1,5 +1,86 @@
 import CommentCard from "../models/commentCard.js"
 import PostMessage from "../models/postMessages.js"
+import User from "../models/user.js"
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+
+export const registerUser = async (req, res) => {
+    const user = req.body
+    const takenUsername = await User.findOne({ username: user.username })
+
+    if (takenUsername) {
+        res.json({ message: "Username or email has been taken", isSuccess: false })
+    } else {
+        user.password = await bcrypt.hash(req.body.password, 10)
+        const dbUser = new User({
+            avatar: user.avatar,
+            username: user.username,
+            password: user.password
+        })
+        dbUser.save()
+        res.json({ message: "Success", isSuccess: true })
+    }
+}
+
+export const loginUser = async (req, res) => {
+    const userLogging = req.body
+    User.findOne({ username: userLogging.username }).then(data => {
+        if (!data) {
+            return res.json({ message: "Invalid Username or Password" })
+        }
+        bcrypt.compare(userLogging.password, data.password).then(isCorrect => {
+            if (isCorrect) {
+                const payload = {
+                    id: data._id,
+                    avatar: data.avatar,
+                    username: data.username
+                }
+                jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 86400 }, (err, token) => {
+                    if (err) return res.json({ message: 'loi r' })
+                    return res.json({ message: "Success", token: `Bearer ${token}` })
+                })
+            } else {
+                return res.json({ message: 'Invalid Username or Password' })
+            }
+        })
+    })
+}
+
+export const verifyJWT = async (req, res, next) => {
+    const token = req.headers["x-access-token"]?.split(' ')[1]
+
+
+    if (token) {
+        jwt.verify(token, process.env.PASSPORT_SECRET, (err, decoded) => {
+            if (err) return res.json({ isLoggedIn: false, message: "Failed To Authenticate" })
+            req.user = {};
+            req.user.id = decoded.id
+            req.user.avatar = decoded.avatar
+            req.user.username = decoded.username
+
+            next()
+        })
+    } else {
+        res.json({ message: 'Incorrect Token Given', isLoggedIn: false })
+    }
+}
+
+export const isUserAuth = async (req, res) => {
+    res.json({ isLoggedIn: true, username: req.user.username, avatar: req.user.avatar })
+}
+
+export const getProfile = async (req, res) => {
+    const username = req.params.id;
+
+    User.findOne({ username: username })
+        .then(dbUser => res.json({
+            avatar: dbUser.avatar,
+            username: dbUser.username,
+        }))
+        .catch(err => res.json({
+            username: "User Not Found",
+        }))
+}
 
 export const getPosts = async (req, res) => {
     try {

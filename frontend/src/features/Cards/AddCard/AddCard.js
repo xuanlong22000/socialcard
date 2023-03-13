@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import './AddCard.css';
 import { addPosts } from '../CardSlice';
 import axios from 'axios';
@@ -32,23 +32,25 @@ function AddCard(props) {
     const [nameValidate, setNameValidate] = useState(false)
     const [descValidate, setDescValidate] = useState(false)
     const [checkImage, setCheckImage] = useState(false)
+    const dataAuthen = useSelector(state => state.posts.dataUser)
+
 
     const handleOnChangeInput = (e) => {
-        if (e.target.name === 'name') { setName(e.target.value); setNameValidate(false) }
+        // if (e.target.name === 'name') { setName(e.target.value); setNameValidate(false) }
         if (e.target.name === 'desc') { setDesc(e.target.value); setDescValidate(false) }
     }
 
-    const handleChangeAvatar = (file) => {
-        if (file.type === 'image/jpeg' || file.type === 'image/png') {
-            setFulAvatar(file)
-            setAvatar(file.name)
-            setAvatarValidate(false)
-        } else {
-            setAvatarValidate(true)
-            setAvatar('File không hợp lệ')
-        }
+    // const handleChangeAvatar = (file) => {
+    //     if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    //         setFulAvatar(file)
+    //         setAvatar(file.name)
+    //         setAvatarValidate(false)
+    //     } else {
+    //         setAvatarValidate(true)
+    //         setAvatar('File không hợp lệ')
+    //     }
 
-    }
+    // }
 
     const handleChangeImage = (file) => {
         if (file.type === 'image/jpeg' || file.type === 'image/png') {
@@ -65,12 +67,12 @@ function AddCard(props) {
         try {
             event.preventDefault();
 
-            if (!avatar) {
-                setAvatarValidate(true)
-            }
-            if (!name) {
-                setNameValidate(true)
-            }
+            // if (!avatar) {
+            //     setAvatarValidate(true)
+            // }
+            // if (!name) {
+            //     setNameValidate(true)
+            // }
             if (!desc) {
                 setDescValidate(true)
             }
@@ -112,18 +114,18 @@ function AddCard(props) {
             //     return
             // }
 
-            if (fullAvatar.type === 'image/jpeg' || fullAvatar.type === 'image/png') {
-                const avatarFile = form.avatar.files[0];
-                const formData1 = new FormData();
-                formData1.append('upload_preset', 'my-uploads');
-                formData1.append('file', avatarFile)
+            // if (fullAvatar.type === 'image/jpeg' || fullAvatar.type === 'image/png') {
+            //     const avatarFile = form.avatar.files[0];
+            //     const formData1 = new FormData();
+            //     formData1.append('upload_preset', 'my-uploads');
+            //     formData1.append('file', avatarFile)
 
-                res1 = await axios.post('https://api.cloudinary.com/v1_1/duoqoiqsg/upload', formData1, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-            }
+            //     res1 = await axios.post('https://api.cloudinary.com/v1_1/duoqoiqsg/upload', formData1, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            // }
 
             if (fullImage.type === 'image/jpeg' || fullImage.type === 'image/png') {
                 const imageFile = form.image.files[0]
@@ -139,13 +141,16 @@ function AddCard(props) {
             }
 
             const newCard = {
-                avatar: res1.data.url,
-                name: name,
+                avatar: dataAuthen.avatar,
+                name: dataAuthen.username,
                 desc: desc,
                 image: res2?.data?.url || 'https://res.cloudinary.com/duoqoiqsg/image/upload/v1657008717/my-uploads/qgwjrp2acfy4of3kwac6.png'
             }
 
-            if (avatar && name && desc) {
+            if (
+                // avatar && name && 
+                desc
+            ) {
                 dispatch(addPosts(newCard)).then((res) => { dispatch(revertAdd(res.payload._id)) })
 
                 close()
@@ -169,7 +174,7 @@ function AddCard(props) {
                 <div className='form-add-card'>
                     <h2 className='header-new-card'>Add a New Card</h2>
 
-                    <div className='form-avatar'>
+                    {/* <div className='form-avatar'>
                         <span style={avatarValidate ? { color: 'red' } : {}} className='name-field'>Avatar<span style={{ color: 'red', marginLeft: '3px' }}>*</span></span>
 
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -196,7 +201,7 @@ function AddCard(props) {
                             value={name}
                             onChange={handleOnChangeInput}
                         />
-                    </div>
+                    </div> */}
                     <div className='name_post'>
                         <span style={descValidate ? { color: 'red' } : {}}>Description<span style={{ color: 'red', marginLeft: '3px' }}>*</span></span>
                         <textarea
@@ -231,7 +236,13 @@ function AddCard(props) {
                         <button
                             type="submit"
                             className="btn-save-add"
-                            disabled={isLoading || avatarValidate || nameValidate || checkImage || descValidate}
+                            disabled={
+                                isLoading ||
+                                // avatarValidate ||
+                                // nameValidate ||
+                                checkImage ||
+                                descValidate
+                            }
                         >
                             {isLoading ? <CircularProgress style={{ width: '20px', height: '20px' }} /> : 'Save'}
                         </button>

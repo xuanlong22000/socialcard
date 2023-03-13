@@ -1,13 +1,17 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddCard from "../AddCard/AddCard";
 import ItemCard from "../ItemCard/ItemCard";
 import "./PostCard.css";
 import axios from 'axios';
-import { getPosts } from '../CardSlice';
+import { getPosts, setDataUser } from '../CardSlice';
 import { revertDelete } from '../RevertSlice';
+import { env } from '../../../config';
+import { useNavigate } from 'react-router-dom';
+import { Avatar, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
+import Logout from '@mui/icons-material/Logout';
 
 // This is LIST social
 
@@ -15,17 +19,43 @@ const PostCard = () => {
 
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('')
+    const dataAuthen = useSelector(state => state.posts.dataUser)
+    const page = useNavigate()
     const dispatch = useDispatch()
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const openListProfile = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseProfile = () => {
+        setAnchorEl(null);
+    }
+
+    const logout = async () => {
+        localStorage.removeItem("token")
+        dispatch(setDataUser({}))
+        await page('/')
+    }
 
     const posts = useSelector(state => state.posts.posts)
     const ListReverts = useSelector(state => state.reverts.revert)
+    useEffect(() => {
+        axios.get(`${env.API_HOST}/posts/isUserAuth`, {
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(res => res.data.isLoggedIn ? dispatch(setDataUser(res.data)) : page('/'))
+    }, [])
+
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const handleRevert = async () => {
         if (ListReverts.length > 0) {
-            await axios.put(`http://localhost:5000/posts/revert/${ListReverts[0]}`)
+            await axios.put(`${env.API_HOST}/posts/revert/${ListReverts[0]}`)
             dispatch(revertDelete())
             dispatch(getPosts())
         } else {
@@ -34,11 +64,71 @@ const PostCard = () => {
 
     }
 
-    const filterPosts = posts.filter(post => post.name.toLowerCase().includes(search.toLowerCase()) || post.desc.toLowerCase().includes(search.toLowerCase()))
+    const filterPosts = posts.filter(post => post?.name?.toLowerCase().includes(search.toLowerCase()) || post?.desc?.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <section className='container-social-card'>
-            <h2 className='title-list-social'>LIST SOCIAL CARD</h2>
+            <div style={{ position: 'relative' }}>
+                <h2 className='title-list-social'>LIST SOCIAL CARD</h2>
+                <Box style={{ position: 'absolute', right: 0, top: '5px' }} sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                    <Tooltip title="Account settings">
+                        <IconButton
+                            onClick={handleClick}
+                            size="small"
+                            sx={{ ml: 2 }}
+                            aria-controls={openListProfile ? 'account-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={openListProfile ? 'true' : undefined}
+                        >
+                            <Avatar sx={{ width: 32, height: 32 }} src={dataAuthen?.avatar} />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+
+                <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={openListProfile}
+                    onClose={handleCloseProfile}
+                    onClick={handleCloseProfile}
+                    PaperProps={{
+                        elevation: 0,
+                        sx: {
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                            },
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: 'background.paper',
+                                transform: 'translateY(-50%) rotate(45deg)',
+                                zIndex: 0,
+                            },
+                        },
+                    }}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                    <MenuItem onClick={logout}>
+                        <ListItemIcon>
+                            <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                    </MenuItem>
+                </Menu>
+
+            </div>
             <div className="group">
                 <button className="btn-revert" type="button" onClick={handleRevert}>Revert</button>
                 {/* <Link to="/add"></Link> */}

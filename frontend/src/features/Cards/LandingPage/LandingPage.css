@@ -1,0 +1,7 @@
+.landing-container {
+  padding: 25px;
+}
+.toggle-button {
+  display: flex;
+  justify-content: flex-end;
+}

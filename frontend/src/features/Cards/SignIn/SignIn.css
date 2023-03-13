@@ -1,0 +1,17 @@
+.signIn-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-logIn {
+  width: 76px;
+  height: 43px;
+  font-size: 13px;
+  color: #ffffff;
+  font: normal normal bold 13px/17px Segoe UI;
+  background: #064ebc 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 10px;
+  cursor: pointer;
+}

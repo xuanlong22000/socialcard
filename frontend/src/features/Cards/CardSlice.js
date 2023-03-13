@@ -36,6 +36,7 @@ export const updatePosts = createAsyncThunk(
 )
 
 const initialState = {
+    dataUser: {},
     posts: []
 }
 
@@ -45,21 +46,9 @@ const CardSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
-        // postAdded: {
-        //     reducer(state, action) {
-        //         SocialCardsApi.saveAll(action.payload)
-        //     },
-        //     prepare(avatar, name, desc, image) {
-        //         return {
-        //             payload: {
-        //                 avatar,
-        //                 name,
-        //                 desc,
-        //                 image
-        //             }
-        //         }
-        //     }
-        // },
+        setDataUser: (state, action) => {
+            state.dataUser = action.payload
+        }
     },
 
     extraReducers: (builder) => {
@@ -87,5 +76,7 @@ const CardSlice = createSlice({
 
 
 })
+
+export const { setDataUser } = CardSlice.actions
 
 export default CardSlice.reducer

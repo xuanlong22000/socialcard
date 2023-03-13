@@ -1,0 +1,59 @@
+.signUp-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-avatar-signUp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.username-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 12px 0px;
+}
+
+.username-input span {
+  margin-right: 5px;
+}
+
+.username-input .input-data {
+  padding: 15px;
+}
+
+.password-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.password-input span {
+  margin-right: 7px;
+}
+
+.password-input .input-data {
+  padding: 15px;
+}
+
+.btn-signUp {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.btn-register {
+  width: 76px;
+  height: 43px;
+  font-size: 13px;
+  color: #ffffff;
+  font: normal normal bold 13px/17px Segoe UI;
+  background: #064ebc 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 10px;
+  cursor: pointer;
+}

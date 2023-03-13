@@ -82,6 +82,7 @@
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   padding: 20px;
+  resize: none;
 }
 
 .input-comment-detail:focus-visible {

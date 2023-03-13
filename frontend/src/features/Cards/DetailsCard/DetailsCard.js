@@ -2,6 +2,7 @@ import axios from 'axios'
 import { format } from 'date-format-parse'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { env } from '../../../config'
 import './DetailsCard.css'
 
 const DetailsCard = () => {
@@ -17,12 +18,12 @@ const DetailsCard = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/details/${path.id}`)
+        axios.get(`${env.API_HOST}/posts/details/${path.id}`)
             .then(res => !res.data.deleted ? setData(res.data) & setCountLike(res.data.like) : page('/'))
     }, [countLike, comments])
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/comment/${path.id}`)
+        axios.get(`${env.API_HOST}/posts/comment/${path.id}`)
             .then((response) => setComments(response.data))
             .catch((error) => console.log(error));
     }, [comments]);
@@ -31,7 +32,7 @@ const DetailsCard = () => {
         e.preventDefault()
         const data = { cardId: path.id, comment: saveComment }
         if (saveComment) {
-            await axios.post(`http://localhost:5000/posts/comment/add`, data)
+            await axios.post(`${env.API_HOST}/posts/comment/add`, data)
                 .then(({ data }) => {
                     setComments([...comments, data]);
                     setSaveComment('')
@@ -45,7 +46,7 @@ const DetailsCard = () => {
 
     const handleLike = async () => {
 
-        await axios.put(`http://localhost:5000/posts/like/${path.id}`, countLike)
+        await axios.put(`${env.API_HOST}/posts/like/${path.id}`, countLike)
             .then(() => setCountLike(prev => prev + 1))
     }
 
