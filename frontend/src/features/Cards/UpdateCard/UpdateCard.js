@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { updatePosts } from '../CardSlice';
 import { CircularProgress } from '@mui/material';
+import { env } from '../../../config';
 
 const Input = styled('input')({
     display: 'none',
@@ -68,7 +69,7 @@ function UpdateCard(props) {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/details/${editId}`)
+        axios.get(`${env.API_HOST}/posts/details/${editId}`)
             .then(res => {
 
                 setId(res.data._id)
@@ -81,7 +82,7 @@ function UpdateCard(props) {
     }, [])
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/details/${editId}`)
+        axios.get(`${env.API_HOST}/posts/details/${editId}`)
             .then(res => {
                 setCheck(res.data.deleted)
             })

@@ -8,6 +8,7 @@ import "./PostCard.css";
 import axios from 'axios';
 import { getPosts } from '../CardSlice';
 import { revertDelete } from '../RevertSlice';
+import { env } from '../../../config';
 
 // This is LIST social
 
@@ -25,7 +26,7 @@ const PostCard = () => {
 
     const handleRevert = async () => {
         if (ListReverts.length > 0) {
-            await axios.put(`http://localhost:5000/posts/revert/${ListReverts[0]}`)
+            await axios.put(`${env.API_HOST}/posts/revert/${ListReverts[0]}`)
             dispatch(revertDelete())
             dispatch(getPosts())
         } else {

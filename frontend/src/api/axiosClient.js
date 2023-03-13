@@ -1,9 +1,10 @@
 import axios from 'axios';
 import queryString from 'query-string';
+import { env } from '../config';
 
 const AxiosClient = axios.create({
-    //192.168.0.120  localhost
-    baseURL: 'http://localhost:5000/posts',
+    // localhost:5000
+    baseURL: `${env.API_HOST}/posts`,
     headers: {
         'content-type': 'application/json'
     },
