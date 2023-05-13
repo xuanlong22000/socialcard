@@ -36,6 +36,7 @@ export const updatePosts = createAsyncThunk(
 )
 
 const initialState = {
+    loading: true,
     posts: []
 }
 
@@ -65,6 +66,7 @@ const CardSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getPosts.fulfilled, (state, action) => {
+                state.loading = false
                 state.posts = action.payload;
             })
 
